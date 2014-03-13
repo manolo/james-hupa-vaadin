@@ -1,0 +1,8 @@
+.project
+.classpath
+.settings
+target
+src/main/java/org/apache/hupa/server
+src/main/java/org/apache/hupa/shared
+src/main/webapp/VAADIN/themes/hupa/styles.css
+src/main/webapp/VAADIN/widgetsets
