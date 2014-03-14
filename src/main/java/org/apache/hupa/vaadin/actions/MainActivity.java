@@ -1,5 +1,7 @@
 package org.apache.hupa.vaadin.actions;
 
+import java.io.Serializable;
+
 import org.apache.hupa.shared.data.ImapFolderImpl;
 import org.apache.hupa.vaadin.hupa.HupaConnector;
 import org.apache.hupa.vaadin.ui.HupaMainScreen;
@@ -11,7 +13,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.UI;
 
 @SuppressWarnings("serial")
-public class MainActivity {
+public class MainActivity implements Serializable {
 	
 	private HupaMainScreen display;
 	private HupaConnector hupa;
@@ -36,10 +38,21 @@ public class MainActivity {
 
 	public void goTo() {
 		UI.getCurrent().setContent(display);
+		folders.goTo();
 		msgList.goTo(new ImapFolderImpl("INBOX"));
 	}
 
 	private void bind() {
+		display.getbReload().addClickListener(new ClickListener() {
+			public void buttonClick(ClickEvent event) {
+				msgList.goTo(msgList.getFolder());
+			}
+		});
+		display.getbDelete().addClickListener(new ClickListener() {
+			public void buttonClick(ClickEvent event) {
+				System.out.println(msgList.getSelected());
+			}
+		});
 		display.getbCompose().addClickListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				compose.goTo(null, null);

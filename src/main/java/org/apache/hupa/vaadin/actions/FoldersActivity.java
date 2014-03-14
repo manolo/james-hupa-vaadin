@@ -1,5 +1,6 @@
 package org.apache.hupa.vaadin.actions;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.apache.hupa.shared.domain.ImapFolder;
@@ -13,7 +14,7 @@ import com.vaadin.ui.UI;
 
 
 @SuppressWarnings("serial")
-public class FoldersActivity {
+public class FoldersActivity implements Serializable {
 	
 	private HupaMainScreen display;
 	private HupaConnector hupa;
@@ -28,10 +29,13 @@ public class FoldersActivity {
 
 	public void goTo() {
 		UI.getCurrent().setContent(display);
+		reload(null);
+	}
+	
+	public void reload(ImapFolder folder) {
 		List<ImapFolder> folders = hupa.fetchFolders();
-		
 		HierarchicalContainer container = new HierarchicalContainer();
-		fillContainer(container, folders, null);
+		fillContainer(container, folders, folder);
 		display.getTreeFolders().setContainerDataSource(container);
 	}
 	

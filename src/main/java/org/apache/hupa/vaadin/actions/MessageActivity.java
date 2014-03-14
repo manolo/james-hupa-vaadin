@@ -1,5 +1,7 @@
 package org.apache.hupa.vaadin.actions;
 
+import java.io.Serializable;
+
 import org.apache.hupa.shared.SConsts;
 import org.apache.hupa.shared.domain.ImapFolder;
 import org.apache.hupa.shared.domain.Message;
@@ -16,7 +18,7 @@ import com.vaadin.ui.Link;
 import com.vaadin.ui.Table;
 
 @SuppressWarnings("serial")
-public class MessageActivity {
+public class MessageActivity implements Serializable {
 	
 	private HupaMainScreen display;
 	private HupaConnector hupa;

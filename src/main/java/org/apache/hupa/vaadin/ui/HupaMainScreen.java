@@ -185,11 +185,11 @@ public class HupaMainScreen extends CustomComponent {
 		
 		// lHupa
 		lHupa = new Label();
-		lHupa.setStyleName("logo");
+		lHupa.setStyleName("v-window-header");
 		lHupa.setImmediate(false);
 		lHupa.setWidth("-1px");
 		lHupa.setHeight("100.0%");
-		lHupa.setValue("Apache Hupa Webmail & Vaadin }>");
+		lHupa.setValue("}> Apache Hupa");
 		hHead.addComponent(lHupa);
 		hHead.setExpandRatio(lHupa, 1.0f);
 		

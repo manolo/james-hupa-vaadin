@@ -1,5 +1,6 @@
 package org.apache.hupa.vaadin.hupa;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Properties;
 
@@ -33,9 +34,9 @@ import com.google.inject.Singleton;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.WrappedHttpSession;
 
-
 @Singleton
-public class HupaConnector {
+@SuppressWarnings("serial")
+public class HupaConnector implements Serializable{
 	
 	private static HupaConnector instance;
 	

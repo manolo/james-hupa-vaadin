@@ -1,5 +1,7 @@
 package org.apache.hupa.vaadin.actions;
 
+import java.io.Serializable;
+
 import org.apache.hupa.shared.domain.Settings;
 import org.apache.hupa.vaadin.hupa.HupaConnector;
 import org.apache.hupa.vaadin.ui.HupaLoginScreen;
@@ -10,24 +12,37 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 
 @SuppressWarnings("serial")
-public class LoginActivity {
+public class LoginActivity implements Serializable {
 	
 	private HupaLoginScreen display;
 	private HupaConnector hupa;
-	private FoldersActivity folders;
+	private MainActivity folders;
+	private Window window;
 	
-	public LoginActivity(HupaConnector hupaConnector, HupaLoginScreen hupaLoginScreen, FoldersActivity foldersActivity) {
+	public LoginActivity(HupaConnector hupaConnector, HupaLoginScreen hupaLoginScreen, MainActivity mainActivity) {
 		hupa = hupaConnector;
 		display = hupaLoginScreen;
-		folders = foldersActivity;
+		folders = mainActivity;
+		window = new Window("}> Hupa Login");
+        window.setModal(false);
+        window.setWidth("400px");
+        window.setHeight("300px");
+        window.setResizable(false);
+		window.setContent(display);
+		window.setClosable(false);
+		window.setDraggable(false);
+		window.center();		
 		bind();
 	}
 	
 	public void goTo() {
-		UI.getCurrent().setContent(display);
+		UI.getCurrent().setContent(new VerticalLayout());
+		UI.getCurrent().addWindow(window);
 	}
 	
     private void bind() {
@@ -41,6 +56,8 @@ public class LoginActivity {
 						display.gettSmtpServer().getValue(),
 						display.gettSmtpPort().getValue(),
 						display.getcSmtpSecure().getValue())) {
+					
+					UI.getCurrent().removeWindow(window);			
 					folders.goTo();
 				} else {
 					Notification.show("Login incorrect:",
