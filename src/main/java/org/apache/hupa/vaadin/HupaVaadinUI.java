@@ -27,19 +27,19 @@ import com.vaadin.ui.UI;
 public class HupaVaadinUI extends UI
 {
     private static HupaConnector hupa = HupaConnector.create();
-	
+    
     @WebServlet(value = "/" + SConsts.SERVLET_DOWNLOAD)
     public static class AttachServlet extends DownloadAttachmentServlet {
-    	public AttachServlet() {
-    		super(hupa.getCache(), hupa.getLogger());
-		}
+        public AttachServlet() {
+            super(hupa.getCache(), hupa.getLogger());
+        }
     }
     
     @WebServlet(value = "/" + SConsts.SERVLET_SOURCE)
     public static class ViewSourceServlet extends MessageSourceServlet {
-    	public ViewSourceServlet() {
-    		super(hupa.getCache(), hupa.getLogger());
-		}
+        public ViewSourceServlet() {
+            super(hupa.getCache(), hupa.getLogger());
+        }
     }
     
     @WebServlet(value = "/*", asyncSupported = true)
@@ -49,7 +49,7 @@ public class HupaVaadinUI extends UI
 
     @Override
     protected void init(VaadinRequest request) {
-    	
+        
         HupaLoginScreen loginScreen = new HupaLoginScreen();
         HupaMainScreen mainScreen = new HupaMainScreen();
         HupaComposeScreen composeScreen = new HupaComposeScreen();
@@ -62,11 +62,12 @@ public class HupaVaadinUI extends UI
         LoginActivity loginActivity = new LoginActivity(hupa, loginScreen, mainActivity);
         
         exportJsFunctions();
+        
         loginActivity.goTo();
     }
     
     private void exportJsFunctions() {
         getPage().getJavaScript().execute("openLink = function(o){open(o, '_blank', '')}");
         getPage().getJavaScript().execute("mailTo = function(o){alert('TODO: not handling mail addresses via JS yet (' + o + ')')}");
-	}
+    }
 }

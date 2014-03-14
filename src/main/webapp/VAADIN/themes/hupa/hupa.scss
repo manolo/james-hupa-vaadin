@@ -20,4 +20,13 @@
   .message {
     padding: 10px;
   }
+  .field {
+    background: white;
+  }
+  .compose {
+    background: rgb(221, 221, 221);
+    border: solid 1px grey;
+    border-radius: 3px;
+    overflow: hidden;
+  }
 }

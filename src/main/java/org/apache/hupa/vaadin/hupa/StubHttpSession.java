@@ -32,7 +32,7 @@ public class StubHttpSession implements HttpSession{
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-	public Enumeration getAttributeNames() {
+    public Enumeration getAttributeNames() {
         return new Enumeration() {
             Iterator it = attributeMap.keySet().iterator();
             public boolean hasMoreElements() {
