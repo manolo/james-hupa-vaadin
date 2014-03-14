@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.hupa.server.IMAPStoreCache;
 import org.apache.hupa.server.ioc.GuiceServerModule;
 import org.apache.hupa.server.preferences.UserPreferencesStorage;
+import org.apache.hupa.server.service.DeleteMessageByUidService;
 import org.apache.hupa.server.service.FetchFoldersService;
 import org.apache.hupa.server.service.FetchMessagesService;
 import org.apache.hupa.server.service.GetMessageDetailsService;
@@ -21,6 +22,7 @@ import org.apache.hupa.server.service.SendReplyMessageService;
 import org.apache.hupa.shared.data.FetchMessagesActionImpl;
 import org.apache.hupa.shared.data.GenericResultImpl;
 import org.apache.hupa.shared.data.GetMessageDetailsActionImpl;
+import org.apache.hupa.shared.domain.DeleteMessageAction;
 import org.apache.hupa.shared.domain.FetchMessagesResult;
 import org.apache.hupa.shared.domain.GenericResult;
 import org.apache.hupa.shared.domain.GetMessageDetailsAction;
@@ -59,6 +61,7 @@ public class HupaConnector implements Serializable{
     @Inject SendMessageService sendMessageService;
     @Inject SendReplyMessageService sendReplyMessageService;
     @Inject SendForwardMessageService sendForwardMessageService;
+    @Inject DeleteMessageByUidService deleteMessageByUidService;
     @Inject IMAPStoreCache cache;
     @Inject UserPreferencesStorage userPreferencesStorage;
     @Inject Log log;
@@ -216,5 +219,13 @@ public class HupaConnector implements Serializable{
             ret.setError(e.getMessage());
         }
         return ret;
+    }
+    
+    public void deleteMessages(DeleteMessageAction action) {
+        try {
+            deleteMessageByUidService.delete(action);
+        } catch (HupaException e) {
+            e.printStackTrace();
+        }
     }
 }

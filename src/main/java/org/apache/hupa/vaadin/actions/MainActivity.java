@@ -1,7 +1,12 @@
 package org.apache.hupa.vaadin.actions;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.hupa.shared.data.DeleteMessageByUidActionImpl;
+import org.apache.hupa.shared.domain.DeleteMessageByUidAction;
+import org.apache.hupa.shared.domain.Message;
 import org.apache.hupa.vaadin.actions.ComposeActivity.Action;
 import org.apache.hupa.vaadin.hupa.HupaConnector;
 import org.apache.hupa.vaadin.ui.HupaMainScreen;
@@ -98,7 +103,15 @@ public class MainActivity implements Serializable {
         });
         display.getbDelete().addClickListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
-                Notification.show("Delete messages: unimplemented yet. " + msgList.getSelected());
+//                DeleteMessageByUidAction action = new DeleteMessageByUidActionImpl();
+//                action.setFolder(msgList.getFolder());
+//                List<Long> uids = new ArrayList<Long>();
+//                for (Message m : msgList.getSelected()) {
+//                    uids.add(m.getUid());
+//                }
+//                action.setMessageUids(uids);
+//                hupa.deleteMessages(action);
+                Notification.show("Delete messages: disabled for security reasons, until confirm dialog is implemented. " + msgList.getSelected());
             }
         });
         display.getbMark().addClickListener(new ClickListener() {

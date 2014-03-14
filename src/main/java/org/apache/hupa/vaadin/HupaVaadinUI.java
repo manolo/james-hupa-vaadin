@@ -43,12 +43,16 @@ public class HupaVaadinUI extends UI
     }
     
     @WebServlet(value = "/*", asyncSupported = true)
-    @VaadinServletConfiguration(productionMode = false, ui = HupaVaadinUI.class, widgetset = "org.apache.hupa.vaadin.AppWidgetSet")
+    @VaadinServletConfiguration(productionMode = false, ui = HupaVaadinUI.class, widgetset = "org.apache.hupa.vaadin.HupaWidgetSet")
     public static class Servlet extends VaadinServlet {
     }
 
     @Override
     protected void init(VaadinRequest request) {
+//        ConfirmDialog.show(UI.getCurrent(), "Jaaaa", new ConfirmDialog.Listener() {
+//            public void onClose(ConfirmDialog arg0) {
+//            }
+//        });
         
         HupaLoginScreen loginScreen = new HupaLoginScreen();
         HupaMainScreen mainScreen = new HupaMainScreen();

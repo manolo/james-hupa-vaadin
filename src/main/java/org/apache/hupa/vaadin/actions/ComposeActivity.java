@@ -82,7 +82,8 @@ public class ComposeActivity implements Serializable {
         UI.getCurrent().addWindow(window);
         fillContactLists();
         
-//        display.gettFrom().setValue(hupa.getUser().getName());
+        if (hupa.getUser() != null)
+            display.gettFrom().setValue(hupa.getUser().getName());
         
         String subject = message != null && message.getSubject() != null ? message.getSubject().trim() : "";
         
