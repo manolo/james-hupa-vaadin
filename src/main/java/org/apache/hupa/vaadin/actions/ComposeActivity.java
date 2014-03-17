@@ -2,6 +2,7 @@ package org.apache.hupa.vaadin.actions;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -40,7 +41,6 @@ public class ComposeActivity implements Serializable {
     private ImapFolder folder;
     private MessageDetails details;
     private Action action;
-    private BeanItemContainer<Contact> contactsContainer = new BeanItemContainer<Contact>(Contact.class);
     private Window window;
     
     private Message message;
@@ -86,6 +86,7 @@ public class ComposeActivity implements Serializable {
             display.gettFrom().setValue(hupa.getUser().getName());
         
         String subject = message != null && message.getSubject() != null ? message.getSubject().trim() : "";
+
         
         switch (a) {
             case COMPOSE:
@@ -159,14 +160,20 @@ public class ComposeActivity implements Serializable {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void fillContactLists() {
+        BeanItemContainer<Contact> contactsContainer = new BeanItemContainer<Contact>(Contact.class);
         contactsContainer.removeAllItems();
         for (Contact c : hupa.getUserStorage().getContacts()) {
             contactsContainer.addBean(c);
         }        
         display.getTfTo().setContainerDataSource(contactsContainer);
+        // TODO: check if null works, or it is an easier way to reset values
+        display.getTfTo().setValue(new LinkedHashSet<Object>());
         display.getTfCc().setContainerDataSource(contactsContainer);
+        display.getTfCc().setValue(new LinkedHashSet<Object>());
         display.getTfBcc().setContainerDataSource(contactsContainer);
+        display.getTfBcc().setValue(new LinkedHashSet<Object>());
     }
 
     private String generateHeader() {
