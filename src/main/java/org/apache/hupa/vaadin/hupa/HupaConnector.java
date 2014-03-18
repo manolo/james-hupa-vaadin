@@ -70,17 +70,15 @@ public class HupaConnector implements Serializable{
         return loginUserService.getSettings(email);
     }
     
+    public static void setInstance(HupaConnector hupaInstance) {
+        instance = hupaInstance;
+    }
     public static HupaConnector create() {
         if (instance == null) {
-            
             Module module = new GuiceServerModule(createDefaultHupaProperties()) {
-                StubHttpSession stub = new StubHttpSession();
                 @Provides
                 public HttpSession getHttpSession() {
-                    return VaadinService.getCurrentRequest() != null &&
-                            VaadinService.getCurrentRequest().getWrappedSession() != null ? 
-                            ((WrappedHttpSession)VaadinService.getCurrentRequest().getWrappedSession()).getHttpSession() :
-                            stub;
+                    return ((WrappedHttpSession)VaadinService.getCurrentRequest().getWrappedSession()).getHttpSession();
                 }                
             };
             
@@ -149,7 +147,7 @@ public class HupaConnector implements Serializable{
         }
     }
     
-    private static Properties createDefaultHupaProperties() {
+    public static Properties createDefaultHupaProperties() {
         Properties p = new Properties();
         p.setProperty("IMAPConnectionPoolSize", "2");
         p.setProperty("IMAPConnectionPoolTimeout", "60");

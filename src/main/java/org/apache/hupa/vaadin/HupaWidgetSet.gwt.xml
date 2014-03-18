@@ -29,6 +29,5 @@
     -->
     <!-- <set-configuration-property name="devModeRedirectEnabled" value="true" /> -->
 
-
     <inherits name="org.vaadin.tokenfield.TokenfieldWidgetset" />
 </module>
