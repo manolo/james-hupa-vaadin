@@ -219,11 +219,14 @@ public class HupaConnector implements Serializable{
         return ret;
     }
     
-    public void deleteMessages(DeleteMessageAction action) {
+    public GenericResult deleteMessages(DeleteMessageAction action) {
+        GenericResult ret = new GenericResultImpl();
         try {
             deleteMessageByUidService.delete(action);
-        } catch (HupaException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            ret.setSuccess(false);
+            ret.setError(e.getMessage());
         }
+        return ret;
     }
 }

@@ -49,10 +49,6 @@ public class HupaVaadinUI extends UI
 
     @Override
     protected void init(VaadinRequest request) {
-//        ConfirmDialog.show(UI.getCurrent(), "Jaaaa", new ConfirmDialog.Listener() {
-//            public void onClose(ConfirmDialog arg0) {
-//            }
-//        });
         
         HupaLoginScreen loginScreen = new HupaLoginScreen();
         HupaMainScreen mainScreen = new HupaMainScreen();

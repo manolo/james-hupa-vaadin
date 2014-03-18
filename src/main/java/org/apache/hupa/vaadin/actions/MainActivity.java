@@ -6,10 +6,12 @@ import java.util.List;
 
 import org.apache.hupa.shared.data.DeleteMessageByUidActionImpl;
 import org.apache.hupa.shared.domain.DeleteMessageByUidAction;
+import org.apache.hupa.shared.domain.GenericResult;
 import org.apache.hupa.shared.domain.Message;
 import org.apache.hupa.vaadin.actions.ComposeActivity.Action;
 import org.apache.hupa.vaadin.hupa.HupaConnector;
 import org.apache.hupa.vaadin.ui.HupaMainScreen;
+import org.vaadin.dialogs.ConfirmDialog;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -17,6 +19,7 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
@@ -103,15 +106,29 @@ public class MainActivity implements Serializable {
         });
         display.getbDelete().addClickListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
-//                DeleteMessageByUidAction action = new DeleteMessageByUidActionImpl();
-//                action.setFolder(msgList.getFolder());
-//                List<Long> uids = new ArrayList<Long>();
-//                for (Message m : msgList.getSelected()) {
-//                    uids.add(m.getUid());
-//                }
-//                action.setMessageUids(uids);
-//                hupa.deleteMessages(action);
-                Notification.show("Delete messages: disabled for security reasons, until confirm dialog is implemented. " + msgList.getSelected());
+                final List<Long> uids = new ArrayList<Long>();
+                for (Message m : msgList.getSelected()) {
+                    uids.add(m.getUid());
+                }
+                if (uids.size() > 0) {
+                    ConfirmDialog.show(UI.getCurrent(), "Do you want to delete " + uids.size() + " messages?", new ConfirmDialog.Listener() {
+                        public void onClose(ConfirmDialog dlg) {
+                            if (dlg.isConfirmed()) {
+                                DeleteMessageByUidAction action = new DeleteMessageByUidActionImpl();
+                                action.setFolder(msgList.getFolder());
+                                action.setMessageUids(uids);
+                                GenericResult r = hupa.deleteMessages(action);
+                                if (r.isSuccess()) {
+                                    Notification.show(uids.size() + " messages where removed", Type.TRAY_NOTIFICATION);
+                                } else {
+                                    Notification.show("Error removing messages", r.getMessage(), Type.ERROR_MESSAGE);
+                                }                      
+                                msgList.reload();
+                            }
+                        }
+                    });
+                    
+                }
             }
         });
         display.getbMark().addClickListener(new ClickListener() {
