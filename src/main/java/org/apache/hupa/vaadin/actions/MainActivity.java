@@ -17,11 +17,15 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
 public class MainActivity implements Serializable {
@@ -32,7 +36,8 @@ public class MainActivity implements Serializable {
     private MessageListActivity msgList;
     private MessageActivity message;
     private ComposeActivity compose;
-    
+    private Window window;
+
     public MainActivity(HupaConnector hupaConnector, HupaMainScreen hupaMainScreen,
             FoldersActivity foldersActivity, MessageListActivity messageListActivity,
             MessageActivity messageActivity, ComposeActivity composeActivity) {
@@ -101,7 +106,20 @@ public class MainActivity implements Serializable {
         });
         display.getbSource().addClickListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
-                Notification.show("View source: unimplemented yet.");
+                String url = MessageActivity.getSourceAttachUrl(message.getFolder().getFullName(), message.getMessage().getUid());
+                if (window == null) {
+                    window = new Window();
+                    window.setModal(true);
+                    window.setWidth("900px");
+                    window.setHeight("700px");
+                    window.setResizable(true);
+                    window.center();
+                }
+                
+                BrowserFrame e = new BrowserFrame("Message source", new ExternalResource(url));
+                e.setSizeFull();
+                window.setContent(e);
+                UI.getCurrent().addWindow(window);
             }
         });
         display.getbDelete().addClickListener(new ClickListener() {

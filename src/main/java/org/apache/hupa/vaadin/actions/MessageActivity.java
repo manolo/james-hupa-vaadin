@@ -77,9 +77,14 @@ public class MessageActivity implements Serializable {
     private void bind() {
     }
     
-    private String getDownloadAttachUrl(String name, String folder, long uid) {
+    private static String getDownloadAttachUrl(String name, String folder, long uid) {
         return SConsts.SERVLET_DOWNLOAD + "?" + SConsts.PARAM_NAME + "="
                 + name + "&" + SConsts.PARAM_FOLDER + "=" + folder + "&" + SConsts.PARAM_UID
                 + "=" + uid + "&" + SConsts.PARAM_MODE + "=inline";
+    }
+    
+    protected static String getSourceAttachUrl(String folder, long uid) {
+        return SConsts.SERVLET_SOURCE + "?" + SConsts.PARAM_UID + "="
+                + uid + "&" + SConsts.PARAM_FOLDER + "=" + folder;
     }
 }
