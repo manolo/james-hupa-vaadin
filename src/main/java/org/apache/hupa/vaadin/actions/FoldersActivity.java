@@ -6,46 +6,45 @@ import java.util.List;
 import org.apache.hupa.shared.data.ImapFolderImpl;
 import org.apache.hupa.shared.domain.ImapFolder;
 import org.apache.hupa.vaadin.hupa.HupaConnector;
-import org.apache.hupa.vaadin.ui.HupaMainScreen;
+import org.apache.hupa.vaadin.ui.FoldersDisplay;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.ui.UI;
 
 
 @SuppressWarnings("serial")
 public class FoldersActivity implements Serializable {
-    
-    private HupaMainScreen display;
+
+    private FoldersDisplay display;
     private HupaConnector hupa;
     private MessageListActivity activity;
     private ImapFolder folder;
-    
-    public FoldersActivity(HupaConnector hupaConnector, HupaMainScreen hupaMainScreen, MessageListActivity messageListActivity) {
+
+    public FoldersActivity(HupaConnector hupaConnector, FoldersDisplay foldersDisplay, MessageListActivity messageListActivity) {
         hupa = hupaConnector;
-        display = hupaMainScreen;
+        display = foldersDisplay;
         activity = messageListActivity;
         bind();
     }
 
     public void goTo() {
-        UI.getCurrent().setContent(display);
+        display.show();
         reload();
     }
-    
+
     public void reload() {
         List<ImapFolder> folders = hupa.fetchFolders();
         HierarchicalContainer container = new HierarchicalContainer();
         fillContainer(container, folders, null);
         display.getTreeFolders().setContainerDataSource(container);
-        
+
         if (folder == null) {
             folder = new ImapFolderImpl(hupa.getUser().getSettings().getInboxFolderName());
         }
         display.getTreeFolders().select(folder);
     }
-    
+
     private void fillContainer(HierarchicalContainer container, List<ImapFolder> list, ImapFolder current) {
         for (ImapFolder f : list) {
             container.addItem(f);
@@ -59,7 +58,7 @@ public class FoldersActivity implements Serializable {
             }
         }
     }
-    
+
     private void bind() {
         display.getTreeFolders().setImmediate(true);
         display.getTreeFolders().addValueChangeListener(new ValueChangeListener() {

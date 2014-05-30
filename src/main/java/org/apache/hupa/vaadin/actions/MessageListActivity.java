@@ -11,7 +11,8 @@ import org.apache.hupa.shared.domain.FetchMessagesResult;
 import org.apache.hupa.shared.domain.ImapFolder;
 import org.apache.hupa.shared.domain.Message;
 import org.apache.hupa.vaadin.hupa.HupaConnector;
-import org.apache.hupa.vaadin.ui.HupaMainScreen;
+import org.apache.hupa.vaadin.ui.MainDisplay;
+import org.apache.hupa.vaadin.ui.MessageListDisplay;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -25,17 +26,19 @@ import com.vaadin.ui.Table;
 
 @SuppressWarnings("serial")
 public class MessageListActivity implements Serializable {
-    
-    private HupaMainScreen display;
+
+    private MessageListDisplay display;
+    private MainDisplay mainDisplay;
     private HupaConnector hupa;
     private MessageActivity activity;
     private IndexedContainer container;
     private ImapFolder folder;
     private Message message;
-    
-    public MessageListActivity(HupaConnector hupaConnector, HupaMainScreen hupaMainScreen, MessageActivity messageActivity) {
+
+    public MessageListActivity(HupaConnector hupaConnector, MessageListDisplay listDisplay, MainDisplay hupaMainScreen, MessageActivity messageActivity) {
         hupa = hupaConnector;
-        display = hupaMainScreen;
+        display = listDisplay;
+        mainDisplay = hupaMainScreen;
         activity = messageActivity;
         bind();
     }
@@ -44,24 +47,24 @@ public class MessageListActivity implements Serializable {
         this.folder = folder;
         reload();
     }
-    
+
     public void reload() {
-        FetchMessagesResult msgs = hupa.fetchMessages(folder, display.getiSearch().getValue().trim());
+        FetchMessagesResult msgs = hupa.fetchMessages(folder, mainDisplay.getiSearch().getValue().trim());
         Table sample = display.getTableMsgs();
         sample.setContainerDataSource(fillDataSource(msgs));
         onSelectMessages();
     }
-    
+
     public ImapFolder getFolder() {
         return folder;
     }
-    
+
     public List<Message> getSelected() {
         @SuppressWarnings("unchecked")
         Set<Message> ids = (Set<Message>)display.getTableMsgs().getValue();
         return new ArrayList<Message>(ids);
     }
-    
+
     @SuppressWarnings("unchecked")
     private IndexedContainer fillDataSource(FetchMessagesResult msgs) {
         container = new IndexedContainer();
@@ -73,11 +76,11 @@ public class MessageListActivity implements Serializable {
             Item i = container.addItem(m);
             i.getItemProperty("from").setValue(m.getFrom());
             i.getItemProperty("date").setValue(m.getReceivedDate());
-            Label l = m.getFlags().contains(IMAPFlag.SEEN) ? 
+            Label l = m.getFlags().contains(IMAPFlag.SEEN) ?
                     new Label("<b>" + m.getSubject() + "</b>", ContentMode.HTML) :
                     new Label(m.getSubject());
             i.getItemProperty("subject").setValue(l);
-            
+
             if (m.hasAttachment()) {
                 i.getItemProperty("att").setValue(new ThemeResource("../hupa/img/clip.png"));
             }
@@ -91,14 +94,14 @@ public class MessageListActivity implements Serializable {
         t.setSelectable(true);
         t.setMultiSelect(true);
         t.setImmediate(true);
-        
+
         t.addValueChangeListener(new ValueChangeListener() {
             public void valueChange(final ValueChangeEvent event) {
                 onSelectMessages();
             }
         });
     }
-    
+
     @SuppressWarnings("unchecked")
     private void onSelectMessages() {
         List<Message> ids = getSelected();
@@ -116,11 +119,11 @@ public class MessageListActivity implements Serializable {
             default:
                 isMultiple = true;
         }
-        display.getbReply().setEnabled(isSingle);
-        display.getbReplyAll().setEnabled(isSingle);
-        display.getbForward().setEnabled(isSingle);
-        display.getbSource().setEnabled(isSingle);
-        display.getbDelete().setEnabled(isSingle || isMultiple);
-        display.getbMark().setEnabled(isSingle || isMultiple);
+        mainDisplay.getbReply().setEnabled(isSingle);
+        mainDisplay.getbReplyAll().setEnabled(isSingle);
+        mainDisplay.getbForward().setEnabled(isSingle);
+        mainDisplay.getbSource().setEnabled(isSingle);
+        mainDisplay.getbDelete().setEnabled(isSingle || isMultiple);
+        mainDisplay.getbMark().setEnabled(isSingle || isMultiple);
     }
 }

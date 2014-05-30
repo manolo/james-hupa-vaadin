@@ -8,7 +8,7 @@ import org.apache.hupa.shared.domain.Message;
 import org.apache.hupa.shared.domain.MessageAttachment;
 import org.apache.hupa.shared.domain.MessageDetails;
 import org.apache.hupa.vaadin.hupa.HupaConnector;
-import org.apache.hupa.vaadin.ui.HupaMainScreen;
+import org.apache.hupa.vaadin.ui.MessageDisplay;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
@@ -19,18 +19,18 @@ import com.vaadin.ui.Table;
 
 @SuppressWarnings("serial")
 public class MessageActivity implements Serializable {
-    
-    private HupaMainScreen display;
+
+    private MessageDisplay display;
     private HupaConnector hupa;
     private IndexedContainer container;
 
     private ImapFolder folder;
     private Message message;
     private MessageDetails details;
-    
-    public MessageActivity(HupaConnector hupaConnector, HupaMainScreen hupaMainScreen) {
+
+    public MessageActivity(HupaConnector hupaConnector, MessageDisplay messageDisplay) {
         hupa = hupaConnector;
-        display = hupaMainScreen;
+        display = messageDisplay;
         bind();
     }
 
@@ -38,12 +38,12 @@ public class MessageActivity implements Serializable {
     public void goTo(ImapFolder f, Message m) {
         folder = f;
         message = m;
-        
+
         details = hupa.loadMessage(folder, message);
         display.getTextMsg().setReadOnly(false);
         display.getTextMsg().setValue(details.getText());
         display.getTextMsg().setReadOnly(true);
-        
+
         Table t = display.getTableAttachments();
         boolean hasAttach = details.getMessageAttachments().size() > 0;
         t.setVisible(hasAttach);
@@ -60,7 +60,7 @@ public class MessageActivity implements Serializable {
         }
         t.setContainerDataSource(container);
     }
-    
+
 
     public ImapFolder getFolder() {
         return folder;
@@ -68,21 +68,21 @@ public class MessageActivity implements Serializable {
 
     public Message getMessage() {
         return message;
-    }    
-    
+    }
+
     public MessageDetails getDetails() {
         return details;
     }
 
     private void bind() {
     }
-    
+
     private static String getDownloadAttachUrl(String name, String folder, long uid) {
         return SConsts.SERVLET_DOWNLOAD + "?" + SConsts.PARAM_NAME + "="
                 + name + "&" + SConsts.PARAM_FOLDER + "=" + folder + "&" + SConsts.PARAM_UID
                 + "=" + uid + "&" + SConsts.PARAM_MODE + "=inline";
     }
-    
+
     protected static String getSourceAttachUrl(String folder, long uid) {
         return SConsts.SERVLET_SOURCE + "?" + SConsts.PARAM_UID + "="
                 + uid + "&" + SConsts.PARAM_FOLDER + "=" + folder;

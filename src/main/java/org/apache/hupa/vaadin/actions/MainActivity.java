@@ -10,7 +10,7 @@ import org.apache.hupa.shared.domain.GenericResult;
 import org.apache.hupa.shared.domain.Message;
 import org.apache.hupa.vaadin.actions.ComposeActivity.Action;
 import org.apache.hupa.vaadin.hupa.HupaConnector;
-import org.apache.hupa.vaadin.ui.HupaMainScreen;
+import org.apache.hupa.vaadin.ui.MainDisplay;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -21,7 +21,6 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.UI;
@@ -29,8 +28,8 @@ import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
 public class MainActivity implements Serializable {
-    
-    private HupaMainScreen display;
+
+    private MainDisplay display;
     private HupaConnector hupa;
     private FoldersActivity folders;
     private MessageListActivity msgList;
@@ -38,10 +37,10 @@ public class MainActivity implements Serializable {
     private ComposeActivity compose;
     private Window window;
 
-    public MainActivity(HupaConnector hupaConnector, HupaMainScreen hupaMainScreen,
+    public MainActivity(HupaConnector hupaConnector, MainDisplay hupaMainScreen,
             FoldersActivity foldersActivity, MessageListActivity messageListActivity,
             MessageActivity messageActivity, ComposeActivity composeActivity) {
-        
+
         hupa = hupaConnector;
         display = hupaMainScreen;
         folders = foldersActivity;
@@ -52,7 +51,7 @@ public class MainActivity implements Serializable {
     }
 
     public void goTo() {
-        UI.getCurrent().setContent(display);
+        display.show();
         display.getlUser().setValue(hupa.getUser().getName());
         folders.goTo();
     }
@@ -78,7 +77,7 @@ public class MainActivity implements Serializable {
                 msgList.reload();
             }
         });
-        
+
         display.getbReload().addClickListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
                 msgList.reload();
@@ -115,7 +114,7 @@ public class MainActivity implements Serializable {
                     window.setResizable(true);
                     window.center();
                 }
-                
+
                 BrowserFrame e = new BrowserFrame("Message source", new ExternalResource(url));
                 e.setSizeFull();
                 window.setContent(e);
@@ -137,15 +136,15 @@ public class MainActivity implements Serializable {
                                 action.setMessageUids(uids);
                                 GenericResult r = hupa.deleteMessages(action);
                                 if (r.isSuccess()) {
-                                    Notification.show(uids.size() + " messages where removed", Type.TRAY_NOTIFICATION);
+                                    Notification.show(uids.size() + " messages were removed", Type.TRAY_NOTIFICATION);
                                 } else {
                                     Notification.show("Error removing messages", r.getMessage(), Type.ERROR_MESSAGE);
-                                }                      
+                                }
                                 msgList.reload();
                             }
                         }
                     });
-                    
+
                 }
             }
         });
