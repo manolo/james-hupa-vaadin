@@ -25,14 +25,14 @@ import com.vaadin.ui.Table;
 
 @SuppressWarnings("serial")
 public class MessageListActivity implements Serializable {
-    
+
     private HupaMainScreen display;
     private HupaConnector hupa;
     private MessageActivity activity;
     private IndexedContainer container;
     private ImapFolder folder;
     private Message message;
-    
+
     public MessageListActivity(HupaConnector hupaConnector, HupaMainScreen hupaMainScreen, MessageActivity messageActivity) {
         hupa = hupaConnector;
         display = hupaMainScreen;
@@ -44,24 +44,24 @@ public class MessageListActivity implements Serializable {
         this.folder = folder;
         reload();
     }
-    
+
     public void reload() {
         FetchMessagesResult msgs = hupa.fetchMessages(folder, display.getiSearch().getValue().trim());
-        Table sample = display.getTableMsgs();
-        sample.setContainerDataSource(fillDataSource(msgs));
+        Table tableMsgs = display.getTableMsgs();
+        tableMsgs.setContainerDataSource(fillDataSource(msgs));
         onSelectMessages();
     }
-    
+
     public ImapFolder getFolder() {
         return folder;
     }
-    
+
     public List<Message> getSelected() {
         @SuppressWarnings("unchecked")
         Set<Message> ids = (Set<Message>)display.getTableMsgs().getValue();
         return new ArrayList<Message>(ids);
     }
-    
+
     @SuppressWarnings("unchecked")
     private IndexedContainer fillDataSource(FetchMessagesResult msgs) {
         container = new IndexedContainer();
@@ -73,11 +73,11 @@ public class MessageListActivity implements Serializable {
             Item i = container.addItem(m);
             i.getItemProperty("from").setValue(m.getFrom());
             i.getItemProperty("date").setValue(m.getReceivedDate());
-            Label l = m.getFlags().contains(IMAPFlag.SEEN) ? 
+            Label l = m.getFlags().contains(IMAPFlag.SEEN) ?
                     new Label("<b>" + m.getSubject() + "</b>", ContentMode.HTML) :
                     new Label(m.getSubject());
             i.getItemProperty("subject").setValue(l);
-            
+
             if (m.hasAttachment()) {
                 i.getItemProperty("att").setValue(new ThemeResource("../hupa/img/clip.png"));
             }
@@ -91,14 +91,14 @@ public class MessageListActivity implements Serializable {
         t.setSelectable(true);
         t.setMultiSelect(true);
         t.setImmediate(true);
-        
+
         t.addValueChangeListener(new ValueChangeListener() {
             public void valueChange(final ValueChangeEvent event) {
                 onSelectMessages();
             }
         });
     }
-    
+
     @SuppressWarnings("unchecked")
     private void onSelectMessages() {
         List<Message> ids = getSelected();

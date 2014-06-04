@@ -36,4 +36,27 @@
     border-radius: 3px;
     overflow: hidden;
   }
+  .v-icon {
+    font-size: 120%;
+    padding-right: 5px;
+  }
+  .v-button-caption {
+    font-size: 82%;
+  }
+  .v-window-main .v-caption,
+  .v-window-main .v-label {
+    float: left;
+    padding-right: 5px;
+  }
+  .folders-label {
+    padding: 4px 2px 4px 10px;
+    border-top: 1px solid silver;
+    border-bottom: 1px solid silver;
+    margin-bottom: 10px
+  }
+  .folders-label:before {
+    font-family: "FontAwesome";
+    content: '\F115';
+    margin-right: 10px;
+  }
 }
